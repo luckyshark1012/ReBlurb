@@ -1,0 +1,12 @@
+{
+    "manifest_version": 3,
+    "name": "ReBlurb",
+    "version": "1.0",
+    "description": "A Chrome web extension that summarizes user reviews of products on ecommerce websites by feeding user reviews to an AI model. Price performance, how the product stands out amongst similar products, and providing unbiased summaries of the product are emphasized to provide useful product selection for the user.",
+    "icons": {
+        "16": "images/icon-16.png",
+        "32": "images/icon-32.png",
+        "48": "images/icon-48.png",
+        "128": "images/icon-128.png"
+    }
+}
