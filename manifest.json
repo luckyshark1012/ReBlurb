@@ -11,9 +11,9 @@
     },
     "content_scripts": [
         {
-            "js": ["scripts/target_reviews.js"],
+            "js": ["scripts/ebay_reviews.js"],
             "matches": [
-                "https://www.target.com/p/*"
+                "https://www.ebay.com/*"
             ]
         }
     ]
