@@ -9,9 +9,13 @@
         "48": "images/icon-48.png",
         "128": "images/icon-128.png"
     },
+    "background": {
+        "scripts": ["processer.js"],
+        "persistent": false
+    },
     "content_scripts": [
         {
-            "js": ["scripts/ebay_reviews.js"],
+            "js": ["content_scripts/ebay_reviews.js"],
             "matches": [
                 "https://www.ebay.com/*"
             ]
