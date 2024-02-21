@@ -10,8 +10,7 @@
         "128": "images/icon-128.png"
     },
     "background": {
-        "scripts": ["background_scripts/processer.js"],
-        "persistent": false
+        "service_worker": "background_script/processer.js"
     },
     "content_scripts": [
         {
