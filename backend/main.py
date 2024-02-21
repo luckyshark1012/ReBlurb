@@ -40,15 +40,21 @@ def process_openAiKey():
     # Return a json string of first message
     return jsonify(processed_data)
 
+"""
+    Function to combine multiple reviews into a single string where each review becomes pipe-delimited
+"""
 def create_user_content(reviews: List[str]) -> str:
     reviews_as_str = ""
     used_chars = 0
+    # For each review
     for review in reviews:
         piped_str = ""
         used_chars += len(review)
+        # Check if adding this review to our string goes over our token limit
         if used_chars > MAX_CHARS:
             break
         else:
+            # Remove last character, add a pipe in its place
             piped_str = review[:-1] + "|"
         reviews_as_str = reviews_as_str + piped_str
     return reviews_as_str
