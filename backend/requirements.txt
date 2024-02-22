@@ -2,4 +2,4 @@ Flask
 gunicorn
 Werkzeug
 openai
-os
+flask_cors
