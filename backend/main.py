@@ -4,6 +4,7 @@ from flask import Flask, request, jsonify
 from openai import OpenAI
 from typing import List
 from flask_cors import CORS
+
 # GPT-3.5-turbo-0125 can use 16,000 tokens in a single request
 MAX_TOKENS=16000
 # Save 250 tokens at least to get back response
