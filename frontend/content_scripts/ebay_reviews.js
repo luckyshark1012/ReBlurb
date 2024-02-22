@@ -19,6 +19,10 @@ fetch(productUrl).then(response => {
             reviews.push(contentElement.textContent.trim());
         }
     });
+    console.log("reviews:",reviews);
+    chrome.runtime.sendMessage({reviews: reviews}, (response) => {
+        console.log('received data', response);
+    });
 });
 
 // Simply speaking, we now have our reviews in some form
