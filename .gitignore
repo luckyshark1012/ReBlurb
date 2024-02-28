@@ -1,2 +1,5 @@
 #Ignore virtual env
 .venv/
+node_modules
+dist
+.vscode
