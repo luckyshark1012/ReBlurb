@@ -4,6 +4,8 @@ name: Deploy to Cloud Run from Source
 
 on:
   push:
+    branches:
+      - main
     paths:
       - backend/**
       - .github/workflows/main.yml
