@@ -3,3 +3,4 @@
 node_modules
 dist
 .vscode
+gcloud_api_key.json
