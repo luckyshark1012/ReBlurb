@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import './popup.css';
-import { getSummary } from '../utils/storage';
 
 const App: React.FC<{}> = () => {
   const [summary, setSummary] = useState<string>('');
