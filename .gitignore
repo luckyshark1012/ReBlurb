@@ -1,5 +1,5 @@
-#Ignore virtual env
-.venv/
+.venv
 node_modules
 dist
 .vscode
+gcloud_api_key.json
