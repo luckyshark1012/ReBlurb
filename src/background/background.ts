@@ -11,7 +11,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         await chrome.storage.local.set({ message: summary.message });
         console.log(await chrome.storage.local.get('message'));
         // Send information back to the content script that includes the summary, indicate that everything went okay!
-        sendResponse({ failure: false, summary });
+        sendResponse(
+          JSON.stringify({ failure: false, message: summary.message })
+        );
       })
       .catch((error) => {
         sendResponse({ failure: true });
