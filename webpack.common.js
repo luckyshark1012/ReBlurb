@@ -8,7 +8,7 @@ module.exports = {
     popup: path.resolve('src/popup/popup.tsx'),
     options: path.resolve('src/options/options.tsx'),
     background: path.resolve('src/background/background.ts'),
-    ebayReviews: path.resolve('src/contentScripts/ebayReviews.ts'),
+    ebayReviews: path.resolve('src/contentScripts/ebayReviews.tsx'),
   },
   module: {
     rules: [
