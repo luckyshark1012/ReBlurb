@@ -1,11 +1,20 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import './popup.css';
+import { getSummary } from '../utils/storage';
 
 const App: React.FC<{}> = () => {
+  const [summary, setSummary] = useState<string>('');
+  useEffect(() => {
+    chrome.storage.local.get('message', (result) => {
+      const message = result.message || '';
+      setSummary(message);
+    });
+  }, []);
+  console.log(summary);
   return (
     <div>
-      <p>Hello World</p>
+      <p>{summary}</p>
     </div>
   );
 };

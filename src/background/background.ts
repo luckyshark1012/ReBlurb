@@ -4,11 +4,14 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.reviews != null) {
     // Call queryBackend to send reviews to webserver to get a summary
     queryBackend(request.reviews)
-      .then((summary) => {
+      .then(async (summary) => {
         // DEBUG STATEMENT
         console.log('Created summary: ', summary);
+        // Store this data to chrome.storage.local
+        await chrome.storage.local.set({ message: summary.message });
+        console.log(await chrome.storage.local.get('message'));
         // Send information back to the content script that includes the summary, indicate that everything went okay!
-        sendResponse({ failure: false, summary: summary });
+        sendResponse({ failure: false, summary });
       })
       .catch((error) => {
         sendResponse({ failure: true });
