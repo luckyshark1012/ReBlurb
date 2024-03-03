@@ -2,8 +2,8 @@
   position: fixed;
   top: 20px;
   right: 20px;
-  width: 200px; /* This is a good width that feels readable */
-  height: 250px; /* Pretty ugly, but its something*/
+  width: 250px; /* This is a good width that feels readable */
+  height: 300px; /* Pretty ugly, but its something*/
   color: red;
   padding: 10px;
   z-index: 170100031; /* Jesus christ this is dumb, took me forever to find out what the z-index of some of these DOM elements on ebay were ;( */

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import Paper from '@mui/material/Paper';
+import { Typography, Stack } from '@mui/material';
+import { GiRobotAntennas } from 'react-icons/gi';
 import './ebayReviews.css';
 
 const App: React.FC<{}> = () => {
@@ -42,12 +44,16 @@ const App: React.FC<{}> = () => {
   }, []);
   return (
     <Paper className="summaryReview">
-      {summary !== null ? <p>{summary}</p> : 'Loading...'}
+      <Stack direction="column" alignItems="center" useFlexGap>
+        <Stack direction="row" alignItems="baseline">
+          <GiRobotAntennas fontSize="48px" />
+          <Typography variant="h5" gutterBottom>
+            Product Summary
+          </Typography>
+        </Stack>
+        {summary !== null ? <p>{summary}</p> : 'Loading...'}
+      </Stack>
     </Paper>
-    /*
-    <div className="summaryReview">
-    </div>
-    */
   );
 };
 
