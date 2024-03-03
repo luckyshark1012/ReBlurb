@@ -1,6 +1,6 @@
 /* Listen for a message, and begin handling when received*/
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  // If the request contains revies
+  // If the request contains reviews
   if (request.reviews != null) {
     // Call queryBackend to send reviews to webserver to get a summary
     queryBackend(request.reviews)
