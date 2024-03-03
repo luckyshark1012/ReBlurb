@@ -2,7 +2,7 @@
   position: fixed;
   top: 20px;
   right: 20px;
-  width: 250px; /* This is a good width that feels readable */
+  width: 300px; /* This is a good width that feels readable */
   height: 300px; /* Pretty ugly, but its something*/
   color: red;
   padding: 10px;
