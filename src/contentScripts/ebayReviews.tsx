@@ -6,8 +6,6 @@ import { GiRobotAntennas } from 'react-icons/gi';
 import './ebayReviews.css';
 import { paginateReviews } from '../utils/ebayUtils/paginate';
 
-const MAX_PAGES = 10;
-
 const App: React.FC<{}> = () => {
   const [summary, setSummary] = useState<string | null>(null);
   const [reviews, setReviews] = useState([]);
