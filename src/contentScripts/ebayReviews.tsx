@@ -21,19 +21,15 @@ const App: React.FC<{}> = () => {
     );
     const seeAllReviewsDivP = document.querySelector('.see--all--reviews');
     // If we are on product listing page, begin pagination on the see all reviews page
-    console.log('seeAllReviewsDivItm:', seeAllReviewsDivItm);
-    console.log('seeAllReviewsDivP:', seeAllReviewsDivP);
     let seeAllReviewsLink = productUrl;
     if (seeAllReviewsDivItm) {
       seeAllReviewsLink = seeAllReviewsDivItm
         .querySelector('.ux-action')
         .getAttribute('href');
-      console.log(seeAllReviewsLink);
     } else if (seeAllReviewsDivP) {
       seeAllReviewsLink = seeAllReviewsDivP
         .querySelector('.see--all--reviews-link')
         .getAttribute('href');
-      console.log(seeAllReviewsLink);
     }
     paginateReviews(seeAllReviewsLink, 0, setReviews, setNoMoreReviews);
   }, []);
