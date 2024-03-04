@@ -28,7 +28,6 @@ const App: React.FC<{}> = () => {
     const seeAllReviewsDivItm = document.querySelector(allReviewsItmSelector);
     const seeAllReviewsDivP = document.querySelector(allReviewsPSelector);
 
-    // TODO:: There is another case here where we don't need to paginate data if there are less then 10 reviews for a single product, create a new function to treat this case
     // Treat as if we are already on the all reviews page unless we get an actual link from the DOM
     let seeAllReviewsLink = productUrl;
     if (seeAllReviewsDivItm) {
