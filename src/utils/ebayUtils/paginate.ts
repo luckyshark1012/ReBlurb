@@ -16,19 +16,23 @@ export async function paginateReviews(
   setNoMoreReviews // update no more reviews state
 ) {
   try {
+    // Query Selectors
+    const reviewSelector = '.ebay-review-section-r';
+    const contentSelector = '.review-item-content';
+    const unorderedListSelector = 'ul.pagination li:last-child';
+    const nextPageSelector = '.spf-link';
+
     const response = await fetch(url); // fetch url
     const html = await response.text(); // convert to html
     // Begin parsing html
     const parser = new DOMParser();
     const doc = parser.parseFromString(html, 'text/html');
-    const reviewElements = doc.querySelectorAll('.ebay-review-section-r');
+    const reviewElements = doc.querySelectorAll(reviewSelector);
     const newReviews = [];
     // for each review element, push back review if exists
     reviewElements.forEach((reviewElement) => {
       // Grab text content of current review
-      const contentElement = reviewElement.querySelector(
-        '.review-item-content'
-      );
+      const contentElement = reviewElement.querySelector(contentSelector);
       // If content exists, push back text onto reviews
       if (contentElement) {
         newReviews.push(contentElement.textContent.trim());
@@ -38,10 +42,10 @@ export async function paginateReviews(
     setReviews((oldReviews) => [...oldReviews, ...newReviews]);
 
     // Try to grab next link
-    const paginate = doc.querySelector('ul.pagination li:last-child');
+    const paginate = doc.querySelector(unorderedListSelector);
     // If we have a list of links and we haven't fetched too many reviews
     if (paginate && count < MAX_PAGES) {
-      const nextPageA = paginate.querySelector('.spf-link');
+      const nextPageA = paginate.querySelector(nextPageSelector);
       const nextPageLink = nextPageA.getAttribute('href');
       const isDisabled = nextPageA.getAttribute('aria-disabled');
       // If link is disabled, we have exhausted all pages, update noMoreReviews and return
