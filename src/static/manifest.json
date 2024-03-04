@@ -15,7 +15,11 @@
   "content_scripts": [
     {
       "js": ["ebayReviews.js"],
-      "matches": ["https://www.ebay.com/*"]
+      "matches": [
+        "https://www.ebay.com/itm/*",
+        "https://www.ebay.com/p/*",
+        "https://www.ebay.com/urw/*"
+      ]
     }
   ],
   "action": {
