@@ -4,56 +4,66 @@ import Paper from '@mui/material/Paper';
 import { Typography, Stack } from '@mui/material';
 import { GiRobotAntennas } from 'react-icons/gi';
 import './ebayReviews.css';
+import { paginateReviews } from '../utils/ebayUtils/paginate';
+
+const MAX_PAGES = 10;
 
 const App: React.FC<{}> = () => {
   const [summary, setSummary] = useState<string | null>(null);
+  const [reviews, setReviews] = useState([]);
+  const [noMoreReviews, setNoMoreReviews] = useState<boolean>(false);
   const productUrl = window.location.href;
+
   useEffect(() => {
-    fetch(productUrl)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Response not ok');
-        }
-        return response.text(); // Grab HTML of product page
-      })
-      .then((html) => {
-        // Begin parsing HTML
-        // Grab each review from reviews of current product
-        const reviewElements = document.querySelectorAll(
-          '.ebay-review-section-r'
-        );
-        const reviews = [];
-        // For each review element in reviewElements
-        reviewElements.forEach((reviewElement) => {
-          // Grab text content of current review
-          const contentElement = reviewElement.querySelector(
-            '.review-item-content'
-          );
-          // If content exists, push back text onto reviews
-          if (contentElement) {
-            reviews.push(contentElement.textContent.trim());
-          }
-        });
-        console.log('reviews:', reviews);
-        chrome.runtime.sendMessage({ reviews: reviews }, (response) => {
-          response = JSON.parse(response);
-          console.log('received data', response);
-          setSummary(response.message);
-        });
-      });
+    // First, try to check if see all reviews div exists, if so we will grab the link paginate all reviews
+    const seeAllReviewsDivItm = document.querySelector(
+      '.x-review-details__allreviews'
+    );
+    const seeAllReviewsDivP = document.querySelector('.see--all--reviews');
+    // If we are on product listing page, begin pagination on the see all reviews page
+    console.log('seeAllReviewsDivItm:', seeAllReviewsDivItm);
+    console.log('seeAllReviewsDivP:', seeAllReviewsDivP);
+    let seeAllReviewsLink = productUrl;
+    if (seeAllReviewsDivItm) {
+      seeAllReviewsLink = seeAllReviewsDivItm
+        .querySelector('.ux-action')
+        .getAttribute('href');
+      console.log(seeAllReviewsLink);
+    } else if (seeAllReviewsDivP) {
+      seeAllReviewsLink = seeAllReviewsDivP
+        .querySelector('.see--all--reviews-link')
+        .getAttribute('href');
+      console.log(seeAllReviewsLink);
+    }
+    paginateReviews(seeAllReviewsLink, 0, setReviews, setNoMoreReviews);
   }, []);
+
+  useEffect(() => {
+    if (noMoreReviews) {
+      console.log(reviews);
+      chrome.runtime.sendMessage({ reviews: reviews }, (response) => {
+        response = JSON.parse(response);
+        console.log('received data', response);
+        setSummary(response.message);
+      });
+    }
+  }, [noMoreReviews]);
   return (
-    <Paper className="summaryReview">
-      <Stack direction="column" alignItems="center" useFlexGap>
-        <Stack direction="row" alignItems="baseline">
-          <GiRobotAntennas fontSize="48px" />
-          <Typography variant="h5" gutterBottom>
-            Product Summary
-          </Typography>
-        </Stack>
-        {summary !== null ? <p>{summary}</p> : 'Loading...'}
-      </Stack>
-    </Paper>
+    <>
+      {noMoreReviews && reviews.length > 0 ? (
+        <Paper className="summaryReview">
+          <Stack direction="column" alignItems="center" useFlexGap>
+            <Stack direction="row" alignItems="baseline">
+              <GiRobotAntennas fontSize="48px" />
+              <Typography variant="h5" fontSize="24px">
+                Product Summary
+              </Typography>
+            </Stack>
+            {summary !== null ? <p>{summary}</p> : 'Loading...'}
+          </Stack>
+        </Paper>
+      ) : null}
+    </>
   );
 };
 
