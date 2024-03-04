@@ -16,37 +16,47 @@ const App: React.FC<{}> = () => {
 
   useEffect(() => {
     // Query Selectors
-    const allReviewsDivSelector = '.x-review-details__allreviews';
+    const allReviewsItmSelector = '.x-review-details__allreviews';
     const allReviewsPSelector = '.see--all--reviews';
     const actionSelectorItm = '.ux-action';
     const actionSelectorP = '.see--all--reviews-link';
+
     // First, try to check if see all reviews div exists, if so we will grab the link paginate all reviews
-    const seeAllReviewsDivItm = document.querySelector(allReviewsDivSelector);
+    // Ebay has two different urls for products, a https://www.ebay.com/itm/... & https://www.ebay.com/p/...
+    // For whatever reason, the DOM is the same with slightly different class names for some elements, such as for the allReviews link
+    // In the below implementation, we query the document twice using both selectors to cover both cases, we will then use the one that is not null
+    const seeAllReviewsDivItm = document.querySelector(allReviewsItmSelector);
     const seeAllReviewsDivP = document.querySelector(allReviewsPSelector);
-    // If we are on product listing page, begin pagination on the see all reviews page
+
+    // TODO:: There is another case here where we don't need to paginate data if there are less then 10 reviews for a single product, create a new function to treat this case
+    // Treat as if we are already on the all reviews page unless we get an actual link from the DOM
     let seeAllReviewsLink = productUrl;
     if (seeAllReviewsDivItm) {
+      // if div is found from itm version, update link
       seeAllReviewsLink = seeAllReviewsDivItm
         .querySelector(actionSelectorItm)
         .getAttribute('href');
     } else if (seeAllReviewsDivP) {
+      // if div is found from p version, update link
       seeAllReviewsLink = seeAllReviewsDivP
         .querySelector(actionSelectorP)
         .getAttribute('href');
     }
+    // Begin pagination on found link
     paginateReviews(seeAllReviewsLink, 0, setReviews, setNoMoreReviews);
   }, []);
 
   useEffect(() => {
+    // If there are no more reviews to grab, send a message to background script to summarize these reviews
     if (noMoreReviews) {
       console.log(reviews);
       chrome.runtime.sendMessage({ reviews: reviews }, (response) => {
         response = JSON.parse(response);
         console.log('received data', response);
-        setSummary(response.message);
+        setSummary(response.message); // update summary with message received
       });
     }
-  }, [noMoreReviews]);
+  }, [noMoreReviews]); // Run effect on update of noMoreReviews
   return (
     <>
       {noMoreReviews && reviews.length > 0 ? (
