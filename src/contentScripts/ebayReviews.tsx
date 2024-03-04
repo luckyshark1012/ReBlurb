@@ -15,20 +15,23 @@ const App: React.FC<{}> = () => {
   const productUrl = window.location.href;
 
   useEffect(() => {
+    // Query Selectors
+    const allReviewsDivSelector = '.x-review-details__allreviews';
+    const allReviewsPSelector = '.see--all--reviews';
+    const actionSelectorItm = '.ux-action';
+    const actionSelectorP = '.see--all--reviews-link';
     // First, try to check if see all reviews div exists, if so we will grab the link paginate all reviews
-    const seeAllReviewsDivItm = document.querySelector(
-      '.x-review-details__allreviews'
-    );
-    const seeAllReviewsDivP = document.querySelector('.see--all--reviews');
+    const seeAllReviewsDivItm = document.querySelector(allReviewsDivSelector);
+    const seeAllReviewsDivP = document.querySelector(allReviewsPSelector);
     // If we are on product listing page, begin pagination on the see all reviews page
     let seeAllReviewsLink = productUrl;
     if (seeAllReviewsDivItm) {
       seeAllReviewsLink = seeAllReviewsDivItm
-        .querySelector('.ux-action')
+        .querySelector(actionSelectorItm)
         .getAttribute('href');
     } else if (seeAllReviewsDivP) {
       seeAllReviewsLink = seeAllReviewsDivP
-        .querySelector('.see--all--reviews-link')
+        .querySelector(actionSelectorP)
         .getAttribute('href');
     }
     paginateReviews(seeAllReviewsLink, 0, setReviews, setNoMoreReviews);
