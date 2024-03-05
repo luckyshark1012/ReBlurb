@@ -3,3 +3,4 @@ gunicorn
 Werkzeug
 openai
 flask_cors
+firebase-admin
