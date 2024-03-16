@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import Paper from '@mui/material/Paper';
-import { Typography, Stack } from '@mui/material';
+import { Typography, Stack, IconButton } from '@mui/material';
 import { GiRobotAntennas } from 'react-icons/gi';
+import CloseIcon from '@mui/icons-material/Close';
 import './ebayReviews.css';
 import { paginateReviews } from '../utils/ebayUtils/paginate';
 
@@ -57,11 +58,22 @@ const App: React.FC<{}> = () => {
   return (
     <>
       {noMoreReviews && reviews.length > 0 ? (
-        <Paper className="summaryReview">
+        <Paper className="summaryReview" elevation={24}>
+          <IconButton
+            style={{ position: 'absolute', top: '0px', right: '0px' }}
+          >
+            <CloseIcon />
+          </IconButton>
           <Stack direction="column" alignItems="center" useFlexGap>
             <Stack direction="row" alignItems="baseline">
-              <GiRobotAntennas fontSize="48px" />
-              <Typography variant="h5" fontSize="24px">
+              <Typography
+                variant="h5"
+                fontSize="24px"
+                justifyContent="space-between"
+                width="100%"
+                marginTop="16px"
+                marginBottom="16px"
+              >
                 Product Summary
               </Typography>
             </Stack>
