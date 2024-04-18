@@ -3,7 +3,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   // If the request contains reviews
   if (request.reviews != null) {
     // Call queryBackend to send reviews to webserver to get a summary
-    queryBackend(request.reviews)
+    insertIntoBackend(request.reviews, request.site, request.itmId)
       .then(async (summary) => {
         // DEBUG STATEMENT
         console.log('Created summary: ', summary);
@@ -24,9 +24,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 });
 
 // Async function to query endpoint to summarize reviews, returns summary
-async function queryBackend(data) {
+async function insertIntoBackend(reviews, site, itmId) {
   // My webserver_url (Should be fine here, no API key is returned. Server will call the openAI API and return a summary to the client)
   const webserver_url = 'https://backend-5qe4piohsq-uw.a.run.app';
+  console.log(reviews, site, itmId);
   try {
     // Send a POST request to webserver containing the reviews
     // Wait for a response from the webserver, whether failure or success
@@ -35,7 +36,7 @@ async function queryBackend(data) {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ reviews: data }),
+      body: JSON.stringify({ reviews: reviews, site: site, itmId: itmId }),
     });
     if (!response.ok) {
       throw new Error('Response not ok');
@@ -43,6 +44,7 @@ async function queryBackend(data) {
     // Return the response we get as a json from the webserver
     return await response.json();
   } catch (error) {
+    console.log(error.message);
     throw new Error('Caught error: ${error.message}');
   }
 }
