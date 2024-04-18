@@ -2,9 +2,11 @@
   position: fixed;
   top: 20px;
   right: 20px;
-  width: 300px; /* This is a good width that feels readable */
-  height: 300px; /* Pretty ugly, but its something*/
-  color: red;
+  width: 320px; /* This is a good width that feels readable */
+  height: 320px;
   padding: 10px;
   z-index: 170100031; /* Jesus christ this is dumb, took me forever to find out what the z-index of some of these DOM elements on ebay were ;( */
+}
+.example p {
+  font-family: Arial, Helvetica, sans-serif;
 }
