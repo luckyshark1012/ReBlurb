@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import Paper from '@mui/material/Paper';
 import { Typography, Stack, IconButton } from '@mui/material';
-import { GiRobotAntennas } from 'react-icons/gi';
 import CloseIcon from '@mui/icons-material/Close';
 import './ebayReviews.css';
 import { paginateReviews } from '../utils/ebayUtils/paginate';
