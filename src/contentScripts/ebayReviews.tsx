@@ -46,12 +46,24 @@ const App: React.FC<{}> = () => {
   useEffect(() => {
     // If there are no more reviews to grab, send a message to background script to summarize these reviews
     if (noMoreReviews) {
+      let itmIdMatch1 = productUrl.match(/itm[=/](\d{12})/);
+      let itmIdMatch2 = productUrl.match(/(?:p|product-reviews)\/(\d{10})/);
       console.log(reviews);
-      chrome.runtime.sendMessage({ reviews: reviews }, (response) => {
-        response = JSON.parse(response);
-        console.log('received data', response);
-        setSummary(response.message); // update summary with message received
-      });
+      let itmId = '';
+      if (itmIdMatch1) {
+        itmId = itmIdMatch1[1];
+      } else if (itmIdMatch2) {
+        itmId = itmIdMatch2[1];
+      }
+      console.log(itmId);
+      chrome.runtime.sendMessage(
+        { reviews: reviews, site: 'Ebay', itmId: itmId },
+        (response) => {
+          response = JSON.parse(response);
+          console.log('received data', response);
+          setSummary(response.message); // update summary with message received
+        }
+      );
     }
   }, [noMoreReviews]); // Run effect on update of noMoreReviews
   return (
