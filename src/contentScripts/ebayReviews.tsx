@@ -10,8 +10,13 @@ import { paginateReviews } from '../utils/ebayUtils/paginate';
 const App: React.FC<{}> = () => {
   const [summary, setSummary] = useState<string | null>(null);
   const [reviews, setReviews] = useState([]);
+  const [hideSummary, setHideSummary] = useState(false);
   const [noMoreReviews, setNoMoreReviews] = useState<boolean>(false);
   const productUrl = window.location.href;
+
+  const handleHideSummary = () => {
+    setHideSummary(true);
+  };
 
   useEffect(() => {
     // Query Selectors
@@ -57,10 +62,11 @@ const App: React.FC<{}> = () => {
   }, [noMoreReviews]); // Run effect on update of noMoreReviews
   return (
     <>
-      {noMoreReviews && reviews.length > 0 ? (
+      {!hideSummary && noMoreReviews && reviews.length > 0 ? (
         <Paper className="summaryReview" elevation={24}>
           <IconButton
             style={{ position: 'absolute', top: '0px', right: '0px' }}
+            onClick={handleHideSummary}
           >
             <CloseIcon />
           </IconButton>
