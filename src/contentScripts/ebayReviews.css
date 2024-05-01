@@ -7,3 +7,7 @@
   padding: 10px;
   z-index: 170100031; /* Jesus christ this is dumb, took me forever to find out what the z-index of some of these DOM elements on ebay were ;( */
 }
+.summaryReview P {
+  white-space: pre-line;
+  font-size: 14px;
+}
