@@ -69,3 +69,9 @@ export async function paginateReviews(
     console.error('Error fetching new reviews: ', error);
   }
 }
+
+// This is grabbed from: https://stackoverflow.com/questions/37764665/how-to-implement-sleep-function-in-typescript
+// NOTE: This is NOT my own code, but is simple enough utility that there is little other way to implement a sleep/delay in TS
+export async function delay(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
