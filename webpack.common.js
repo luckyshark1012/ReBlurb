@@ -9,6 +9,10 @@ module.exports = {
     options: path.resolve('src/options/options.tsx'),
     background: path.resolve('src/background/background.ts'),
     ebayReviews: path.resolve('src/contentScripts/ebayReviews.tsx'),
+    etsyReviews: path.resolve('src/contentScripts/etsyReviews.tsx'),
+    pcPartPickerReviews: path.resolve(
+      'src/contentScripts/pcPartPickerReviews.tsx'
+    ),
   },
   module: {
     rules: [
@@ -51,7 +55,12 @@ module.exports = {
   optimization: {
     splitChunks: {
       chunks(chunk) {
-        return chunk.name !== 'ebayReviews' && chunk.name !== 'background';
+        return (
+          chunk.name !== 'ebayReviews' &&
+          chunk.name !== 'background' &&
+          chunk.name !== 'etsyReviews' &&
+          chunk.name !== 'pcPartPickerReviews'
+        );
       },
     },
   },
