@@ -96,11 +96,7 @@ const App: React.FC<{}> = () => {
                 Product Summary
               </Typography>
             </Stack>
-            {summary !== null ? (
-              <p style={{ fontSize: '14px' }}>{summary}</p>
-            ) : (
-              'Loading...'
-            )}
+            {summary !== null ? <p>{summary}</p> : 'Loading...'}
           </Stack>
         </Paper>
       ) : null}
