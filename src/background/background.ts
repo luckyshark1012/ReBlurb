@@ -27,7 +27,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 async function insertIntoBackend(reviews, site, itmId) {
   // My webserver_url (Should be fine here, no API key is returned. Server will call the openAI API and return a summary to the client)
   const webserver_url = 'https://backend-5qe4piohsq-uw.a.run.app';
-  console.log(reviews, site, itmId);
+  let promptType = (await chrome.storage.local.get('promptType')).promptType;
+  console.log(promptType);
+  console.log(reviews, site, itmId, promptType);
   try {
     // Send a POST request to webserver containing the reviews
     // Wait for a response from the webserver, whether failure or success
@@ -36,7 +38,12 @@ async function insertIntoBackend(reviews, site, itmId) {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ reviews: reviews, site: site, itmId: itmId }),
+      body: JSON.stringify({
+        reviews: reviews,
+        site: site,
+        itmId: itmId,
+        promptType: promptType,
+      }),
     });
     if (!response.ok) {
       throw new Error('Response not ok');
