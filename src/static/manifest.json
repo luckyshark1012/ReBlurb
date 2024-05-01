@@ -20,6 +20,14 @@
         "https://www.ebay.com/p/*",
         "https://www.ebay.com/urw/*"
       ]
+    },
+    {
+      "js": ["etsyReviews.js"],
+      "matches": ["https://www.etsy.com/listing/*"]
+    },
+    {
+      "js": ["pcPartPickerReviews.js"],
+      "matches": ["https://pcpartpicker.com/product/*"]
     }
   ],
   "action": {
@@ -31,6 +39,9 @@
     },
     "default_popup": "popup.html"
   },
-  "host_permissions": ["https://backend-5qe4piohsq-uw.a.run.app/"],
+  "host_permissions": [
+    "https://backend-5qe4piohsq-uw.a.run.app/",
+    "https://pcpartpicker.com/*"
+  ],
   "permissions": ["storage"]
 }
