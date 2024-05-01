@@ -27,6 +27,7 @@ TOKENS_TO_USE = MAX_TOKENS - 250
 MAX_CHARS = 4 * TOKENS_TO_USE
 
 PROMPT_SUMMARIZE_AS_PARAGRAPH = "You are a product summarizer, capable of summarizing multiple product reviews into a single concise summary of what the reviews emphasize. Keep your response to 80 words or less. Individual product reviews are separated by the '|' character. Keep your response to 3 sentences or less."
+PROMPT_SUMMARIZE_AS_BULLETS = "You are a product summarizer, capable of summarizing multiple product reviews into 3 bullet points or less. Keep your response to 80 words or less and use the standard bullet character. Seperate bullet points with 2 newlines. Individual product reviews are separated by the '|' character."
 GPT_3_5_TURBO_0125 = "gpt-3.5-turbo-0125"
 
 app = Flask(__name__)
@@ -40,7 +41,8 @@ def process_request():
     # Before trying to process data, check if a summary already exists so we don't repeat work we already did (ie. waste API calls)
     itm_id = data["itmId"]
     site = data["site"]
-    summary = queryDBSummary('productSummaries', itm_id, site)
+    promptType = data["promptType"]
+    summary = queryDBSummary('productSummaries', itm_id, site, promptType)
     if summary != None:
         processed_data = {'message': summary}
     else:  # Else process data
@@ -49,10 +51,13 @@ def process_request():
         if (reviews == None):
             return jsonify({'error': 'Missing required data field: reviews'})
         review_string = create_user_content(reviews)
-
-        summary = callOpenAI(GPT_3_5_TURBO_0125,
-                             PROMPT_SUMMARIZE_AS_PARAGRAPH, review_string)
-        insertIntoDB('productSummaries', itm_id, summary, site)
+        if promptType == "sentences":
+            summary = callOpenAI(GPT_3_5_TURBO_0125,
+                                 PROMPT_SUMMARIZE_AS_PARAGRAPH, review_string)
+        else:
+            summary = callOpenAI(GPT_3_5_TURBO_0125,
+                                 PROMPT_SUMMARIZE_AS_BULLETS, review_string)
+        insertIntoDB('productSummaries', itm_id, summary, site, promptType)
         # Grab the first message's content: what gpt is sending as result
         processed_data = {'message': summary}
     # Return a json string of first message
@@ -81,8 +86,8 @@ def create_user_content(reviews: List[str]) -> str:
     return reviews_as_str
 
 
-def insertIntoDB(collection_name: str, productId: str, summary: str, site: str):
-    document_name = f"{productId}:{site}"
+def insertIntoDB(collection_name: str, productId: str, summary: str, site: str, promptType: str):
+    document_name = f"{productId}:{site}:{promptType}"
     sum_ref = db.collection(
         collection_name).document(document_name)
     print("trying to set doc")
@@ -93,8 +98,8 @@ def insertIntoDB(collection_name: str, productId: str, summary: str, site: str):
     print("done setting doc")
 
 
-def queryDBSummary(collection_name: str, productId: str, site: str):
-    document_name = f"{productId}:{site}"
+def queryDBSummary(collection_name: str, productId: str, site: str, promptType: str):
+    document_name = f"{productId}:{site}:{promptType}"
     sum_ref = db.collection(
         collection_name).document(document_name)
     try:
