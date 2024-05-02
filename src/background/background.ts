@@ -3,7 +3,12 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   // If the request contains reviews
   if (request.reviews != null) {
     // Call queryBackend to send reviews to webserver to get a summary
-    insertIntoBackend(request.reviews, request.site, request.itmId)
+    insertIntoBackend(
+      request.reviews,
+      request.site,
+      request.itmId,
+      request.forceRefresh
+    )
       .then(async (summary) => {
         // DEBUG STATEMENT
         console.log('Created summary: ', summary);
@@ -24,7 +29,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 });
 
 // Async function to query endpoint to summarize reviews, returns summary
-async function insertIntoBackend(reviews, site, itmId) {
+async function insertIntoBackend(reviews, site, itmId, forceRefresh) {
   // My webserver_url (Should be fine here, no API key is returned. Server will call the openAI API and return a summary to the client)
   const webserver_url = 'https://backend-5qe4piohsq-uw.a.run.app';
   let promptType = (await chrome.storage.local.get('promptType')).promptType;
@@ -43,6 +48,7 @@ async function insertIntoBackend(reviews, site, itmId) {
         site: site,
         itmId: itmId,
         promptType: promptType,
+        forceRefresh: forceRefresh,
       }),
     });
     if (!response.ok) {
