@@ -45,6 +45,14 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
 });
 
+chrome.runtime.onInstalled.addListener((details) => {
+  initializeDefaultData();
+});
+
+function initializeDefaultData() {
+  chrome.storage.local.set({ promptType: 'sentences' });
+}
+
 // Async function to query endpoint to summarize reviews, returns summary
 async function insertIntoBackend(reviews, site, itmId, forceRefresh) {
   // My webserver_url (Should be fine here, no API key is returned. Server will call the openAI API and return a summary to the client)

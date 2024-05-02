@@ -13,7 +13,7 @@ export function Summary(
 ) {
   return (
     <>
-      {!hideSummary && noMoreReviews ? (
+      {!hideSummary ? (
         <Paper className="summaryReview" elevation={24}>
           <IconButton
             style={{ position: 'absolute', top: '0px', left: '0px' }}

@@ -1,9 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import Paper from '@mui/material/Paper';
-import { Typography, Stack, IconButton } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import RefreshIcon from '@mui/icons-material/Refresh';
 import './ebayReviews.css';
 import { paginateReviews } from '../utils/pcpartpickerUtils/paginate';
 import { Summary } from '../utils/general/general';
@@ -22,6 +18,9 @@ const App: React.FC<{}> = () => {
   };
   const handleRefreshSummary = () => {
     setForceRefresh(true);
+    if (!alreadyInDB) {
+      setAlreadyInDB(true);
+    }
   };
 
   useEffect(() => {
@@ -42,11 +41,13 @@ const App: React.FC<{}> = () => {
         if (response.inDB) {
           setSummary(response.summary);
           setHideSummary(false);
-          setNoMoreReviews(true);
+        } else {
+          setAlreadyInDB(true);
         }
       }
     );
   }, []);
+
   useEffect(() => {
     if (alreadyInDB) {
       // Query Selectors
@@ -82,7 +83,7 @@ const App: React.FC<{}> = () => {
 
   useEffect(() => {
     // If there are no more reviews to grab, send a message to background script to summarize these reviews
-    if (noMoreReviews && forceRefresh) {
+    if (alreadyInDB && noMoreReviews && forceRefresh) {
       let itmIdMatch1 = productUrl.match(/product[/]([a-zA-Z0-9]{6})/);
       console.log(reviews);
       let itmId = '';

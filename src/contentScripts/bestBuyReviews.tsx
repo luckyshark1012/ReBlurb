@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import './ebayReviews.css';
-import { paginateReviews } from '../utils/ebayUtils/paginate';
+import { paginateReviews } from '../utils/pcpartpickerUtils/paginate';
 import { Summary } from '../utils/general/general';
 
 const App: React.FC<{}> = () => {
@@ -22,19 +22,18 @@ const App: React.FC<{}> = () => {
       setAlreadyInDB(true);
     }
   };
+
   useEffect(() => {
-    let itmIdMatch1 = productUrl.match(/itm[=/](\d{12})/);
-    let itmIdMatch2 = productUrl.match(/(?:p|product-reviews)\/(\d{10})/);
+    let itmIdMatch1 = productUrl.match(/[/]([0-9]{7})/);
     console.log(reviews);
     let itmId = '';
     if (itmIdMatch1) {
       itmId = itmIdMatch1[1];
-    } else if (itmIdMatch2) {
-      itmId = itmIdMatch2[1];
     }
+    console.log('itmId=', itmId);
     chrome.runtime.sendMessage(
       {
-        site: 'Ebay',
+        site: 'BestBuy',
         itmId: itmId,
       },
       (response) => {
@@ -49,56 +48,55 @@ const App: React.FC<{}> = () => {
       }
     );
   }, []);
+
   useEffect(() => {
     if (alreadyInDB) {
       // Query Selectors
-      const allReviewsItmSelector = '.x-review-details__allreviews';
-      const allReviewsPSelector = '.see--all--reviews';
-      const actionSelectorItm = '.ux-action';
-      const actionSelectorP = '.see--all--reviews-link';
-
+      const allReviewsDivSelector =
+        '.c-button.c-button-secondary.c-button-md.c-button-block.see-more-reviews.mb-xs-300.mb-md-none.mr-md-400';
+      const anchorAllReviewSelector = '.button.button--small';
       // First, try to check if see all reviews div exists, if so we will grab the link paginate all reviews
       // Ebay has two different urls for products, a https://www.ebay.com/itm/... & https://www.ebay.com/p/...
       // For whatever reason, the DOM is the same with slightly different class names for some elements, such as for the allReviews link
       // In the below implementation, we query the document twice using both selectors to cover both cases, we will then use the one that is not null
-      const seeAllReviewsDivItm = document.querySelector(allReviewsItmSelector);
-      const seeAllReviewsDivP = document.querySelector(allReviewsPSelector);
+      const seeAllReviewsDiv = document.querySelector(allReviewsDivSelector);
 
       // Treat as if we are already on the all reviews page unless we get an actual link from the DOM
       let seeAllReviewsLink = productUrl;
-      if (seeAllReviewsDivItm) {
-        // if div is found from itm version, update link
-        seeAllReviewsLink = seeAllReviewsDivItm
-          .querySelector(actionSelectorItm)
-          .getAttribute('href');
-      } else if (seeAllReviewsDivP) {
-        // if div is found from p version, update link
-        seeAllReviewsLink = seeAllReviewsDivP
-          .querySelector(actionSelectorP)
-          .getAttribute('href');
+      if (seeAllReviewsDiv) {
+        // if div is found, check if we can grab link
+        const anchorElement = seeAllReviewsDiv.querySelector(
+          anchorAllReviewSelector
+        );
+        // if anchor element found, update link
+        if (anchorElement) {
+          seeAllReviewsLink = anchorElement.getAttribute('href');
+        }
       }
       // Begin pagination on found link
-      paginateReviews(seeAllReviewsLink, 0, setReviews, setNoMoreReviews);
+      paginateReviews(
+        seeAllReviewsLink + '?page=1',
+        1,
+        setReviews,
+        setNoMoreReviews
+      );
     }
   }, [alreadyInDB]);
 
   useEffect(() => {
     // If there are no more reviews to grab, send a message to background script to summarize these reviews
     if (alreadyInDB && noMoreReviews && forceRefresh) {
-      let itmIdMatch1 = productUrl.match(/itm[=/](\d{12})/);
-      let itmIdMatch2 = productUrl.match(/(?:p|product-reviews)\/(\d{10})/);
+      let itmIdMatch1 = productUrl.match(/[/]([0-9]{7})/);
       console.log(reviews);
       let itmId = '';
       if (itmIdMatch1) {
         itmId = itmIdMatch1[1];
-      } else if (itmIdMatch2) {
-        itmId = itmIdMatch2[1];
       }
       console.log(itmId);
       chrome.runtime.sendMessage(
         {
           reviews: reviews,
-          site: 'Ebay',
+          site: 'BestBuy',
           itmId: itmId,
           forceRefresh: forceRefresh,
         },

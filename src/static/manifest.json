@@ -28,6 +28,10 @@
     {
       "js": ["pcPartPickerReviews.js"],
       "matches": ["https://pcpartpicker.com/product/*"]
+    },
+    {
+      "js": ["bestBuyReviews.js"],
+      "matches": ["https://www.bestbuy.com/site/*.p?*"]
     }
   ],
   "action": {
