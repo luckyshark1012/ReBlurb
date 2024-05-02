@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import Paper from '@mui/material/Paper';
 import { Typography, Stack, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import RefreshIcon from '@mui/icons-material/Refresh';
 import './ebayReviews.css';
 import { paginateReviews } from '../utils/pcpartpickerUtils/paginate';
 
@@ -11,12 +12,15 @@ const App: React.FC<{}> = () => {
   const [reviews, setReviews] = useState([]);
   const [hideSummary, setHideSummary] = useState(false);
   const [noMoreReviews, setNoMoreReviews] = useState<boolean>(false);
+  const [forceRefresh, setForceRefresh] = useState<boolean>(true);
   const productUrl = window.location.href;
 
   const handleHideSummary = () => {
     setHideSummary(true);
   };
-
+  const handleRefreshSummary = () => {
+    setForceRefresh(true);
+  };
   useEffect(() => {
     // Query Selectors
     /*
@@ -55,7 +59,7 @@ const App: React.FC<{}> = () => {
 
   useEffect(() => {
     // If there are no more reviews to grab, send a message to background script to summarize these reviews
-    if (noMoreReviews) {
+    if (noMoreReviews && forceRefresh) {
       let itmIdMatch1 = productUrl.match(/product[/]([a-zA-Z0-9]{6})/);
       console.log(reviews);
       let itmId = '';
@@ -64,19 +68,31 @@ const App: React.FC<{}> = () => {
       }
       console.log(itmId);
       chrome.runtime.sendMessage(
-        { reviews: reviews, site: 'PcPartPicker', itmId: itmId },
+        {
+          reviews: reviews,
+          site: 'PcPartPicker',
+          itmId: itmId,
+          forceRefresh: forceRefresh,
+        },
         (response) => {
           response = JSON.parse(response);
           console.log('received data', response);
           setSummary(response.message); // update summary with message received
+          setForceRefresh(false);
         }
       );
     }
-  }, [noMoreReviews]); // Run effect on update of noMoreReviews
+  }, [noMoreReviews, forceRefresh]); // Run effect on update of noMoreReviews
   return (
     <>
       {!hideSummary && noMoreReviews && reviews.length > 0 ? (
         <Paper className="summaryReview" elevation={24}>
+          <IconButton
+            style={{ position: 'absolute', top: '0px', left: '0px' }}
+            onClick={handleRefreshSummary}
+          >
+            <RefreshIcon />
+          </IconButton>
           <IconButton
             style={{ position: 'absolute', top: '0px', right: '0px' }}
             onClick={handleHideSummary}
