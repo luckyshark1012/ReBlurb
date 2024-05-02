@@ -42,8 +42,9 @@ def process_request():
     itm_id = data["itmId"]
     site = data["site"]
     promptType = data["promptType"]
+    forceRefresh = data["forceRefresh"]
     summary = queryDBSummary('productSummaries', itm_id, site, promptType)
-    if summary != None:
+    if summary != None and (forceRefresh == None or forceRefresh == False):
         processed_data = {'message': summary}
     else:  # Else process data
         # If no reviews provided in request, return error
