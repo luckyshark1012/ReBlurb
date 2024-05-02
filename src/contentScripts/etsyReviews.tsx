@@ -4,17 +4,22 @@ import Paper from '@mui/material/Paper';
 import { Typography, Stack, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import './ebayReviews.css';
+import { Summary } from '../utils/general/general';
+
 const App: React.FC<{}> = () => {
   const [summary, setSummary] = useState<string | null>(null);
   const [reviews, setReviews] = useState([]);
   const [hideSummary, setHideSummary] = useState(false);
   const [noMoreReviews, setNoMoreReviews] = useState<boolean>(false);
+  const [forceRefresh, setForceRefresh] = useState<boolean>(true);
   const productUrl = window.location.href;
 
   const handleHideSummary = () => {
     setHideSummary(true);
   };
-
+  const handleRefreshSummary = () => {
+    setForceRefresh(true);
+  };
   useEffect(() => {
     // Etsy is organized pretty straightforward, these are the two selectors I will be using to get reviews
     const reviewDivSelector = '.wt-grid__item-xs-12.review-card';
@@ -87,7 +92,8 @@ const App: React.FC<{}> = () => {
 
   useEffect(() => {
     // If there are no more reviews to grab, send a message to background script to summarize these reviews
-    if (noMoreReviews) {
+    console.log(noMoreReviews, forceRefresh);
+    if (noMoreReviews && forceRefresh) {
       let itmIdMatch1 = productUrl.match(/listing[/](\d{10})/);
       console.log(reviews);
       let itmId = '';
@@ -96,43 +102,28 @@ const App: React.FC<{}> = () => {
       }
       console.log(itmId);
       chrome.runtime.sendMessage(
-        { reviews: reviews, site: 'Etsy', itmId: itmId },
+        {
+          reviews: reviews,
+          site: 'Etsy',
+          itmId: itmId,
+          forceRefresh: forceRefresh,
+        },
         (response) => {
           response = JSON.parse(response);
           console.log('received data', response);
           setSummary(response.message); // update summary with message received
+          setForceRefresh(false);
         }
       );
     }
-  }, [noMoreReviews]); // Run effect on update of noMoreReviews
-  return (
-    <>
-      {!hideSummary && noMoreReviews && reviews.length > 0 ? (
-        <Paper className="summaryReview" elevation={24}>
-          <IconButton
-            style={{ position: 'absolute', top: '0px', right: '0px' }}
-            onClick={handleHideSummary}
-          >
-            <CloseIcon />
-          </IconButton>
-          <Stack direction="column" alignItems="center" useFlexGap>
-            <Stack direction="row" alignItems="baseline">
-              <Typography
-                variant="h5"
-                fontSize="24px"
-                justifyContent="space-between"
-                width="100%"
-                marginTop="16px"
-                marginBottom="16px"
-              >
-                Product Summary
-              </Typography>
-            </Stack>
-            {summary !== null ? <p>{summary}</p> : 'Loading...'}
-          </Stack>
-        </Paper>
-      ) : null}
-    </>
+  }, [noMoreReviews, forceRefresh]); // Run effect on update of noMoreReviews
+  return Summary(
+    hideSummary,
+    noMoreReviews,
+    reviews,
+    handleRefreshSummary,
+    handleHideSummary,
+    summary
   );
 };
 

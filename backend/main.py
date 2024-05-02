@@ -65,6 +65,19 @@ def process_request():
     return jsonify(processed_data)
 
 
+@app.route("/checkDB", methods=["GET"])
+def checkDB():
+    site = request.args.get('site')
+    itmId = request.args.get('itmId')
+    promptType = request.args.get('promptType')
+    summary = queryDBSummary('productSummaries', itmId, site, promptType)
+    if summary != None:
+        processed_data = {'inDB': True, 'summary': summary}
+    else:
+        processed_data = {'inDB': False, 'summary': ''}
+    return jsonify(processed_data)
+
+
 """
     Function to combine multiple reviews into a single string where each review becomes pipe-delimited
 """
