@@ -11,8 +11,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     )
       .then(async (summary) => {
         // have to mark as async so we can use await
-        // DEBUG STATEMENT
-        console.log('Created summary: ', summary);
         // Send information back to the content script that includes the summary, indicate that everything went okay!
         sendResponse(
           JSON.stringify({ failure: false, message: summary.message })
@@ -24,15 +22,12 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     // Make asynchronous here: https://developer.chrome.com/docs/extensions/develop/concepts/messaging
     return true;
   } else {
-    console.log('About to check if in DB');
     checkInDB(request.site, request.itmId).then(async (response) => {
-      console.log(
-        JSON.stringify({
-          failure: false,
-          inDB: response.inDB,
-          summary: response.summary,
-        })
-      );
+      JSON.stringify({
+        failure: false,
+        inDB: response.inDB,
+        summary: response.summary,
+      });
       sendResponse(
         JSON.stringify({
           failure: false,
@@ -58,8 +53,6 @@ async function insertIntoBackend(reviews, site, itmId, forceRefresh) {
   // My webserver_url (Should be fine here, no API key is returned. Server will call the openAI API and return a summary to the client)
   const webserver_url = 'https://backend-5qe4piohsq-uw.a.run.app';
   let promptType = (await chrome.storage.local.get('promptType')).promptType;
-  console.log(promptType);
-  console.log(reviews, site, itmId, promptType);
   try {
     // Send a POST request to webserver containing the reviews
     // Wait for a response from the webserver, whether failure or success
@@ -82,7 +75,6 @@ async function insertIntoBackend(reviews, site, itmId, forceRefresh) {
     // Return the response we get as a json from the webserver
     return await response.json();
   } catch (error) {
-    console.log(error.message);
     throw new Error('Caught error: ${error.message}');
   }
 }
@@ -107,7 +99,6 @@ async function checkInDB(site, itmId) {
     // Return the response we get as a json from the webserver
     return await response.json();
   } catch (error) {
-    console.log(error.message);
     throw new Error('Caught error: ${error.message}');
   }
 }

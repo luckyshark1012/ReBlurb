@@ -16,16 +16,18 @@ export function Summary(
       {!hideSummary ? (
         <Paper className="summaryReview" elevation={24}>
           <IconButton
+            className="iconButton"
             style={{ position: 'absolute', top: '0px', left: '0px' }}
             onClick={handleRefreshSummary}
           >
-            <RefreshIcon />
+            <RefreshIcon style={{ fontSize: '15px' }} />
           </IconButton>
           <IconButton
+            className="iconButton"
             style={{ position: 'absolute', top: '0px', right: '0px' }}
             onClick={handleHideSummary}
           >
-            <CloseIcon />
+            <CloseIcon style={{ fontSize: '15px' }} />
           </IconButton>
           <Stack direction="column" alignItems="center" useFlexGap width="100%">
             <Stack

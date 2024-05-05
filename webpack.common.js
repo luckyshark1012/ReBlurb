@@ -10,6 +10,7 @@ module.exports = {
     background: path.resolve('src/background/background.ts'),
     ebayReviews: path.resolve('src/contentScripts/ebayReviews.tsx'),
     etsyReviews: path.resolve('src/contentScripts/etsyReviews.tsx'),
+    bestBuyReviews: path.resolve('src/contentScripts/bestBuyReviews.tsx'),
     pcPartPickerReviews: path.resolve(
       'src/contentScripts/pcPartPickerReviews.tsx'
     ),
@@ -59,7 +60,8 @@ module.exports = {
           chunk.name !== 'ebayReviews' &&
           chunk.name !== 'background' &&
           chunk.name !== 'etsyReviews' &&
-          chunk.name !== 'pcPartPickerReviews'
+          chunk.name !== 'pcPartPickerReviews' &&
+          chunk.name !== 'bestBuyReviews'
         );
       },
     },

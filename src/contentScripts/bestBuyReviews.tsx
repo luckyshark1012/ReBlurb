@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import './ebayReviews.css';
-import { paginateReviews } from '../utils/pcpartpickerUtils/paginate';
+import './summary.css';
+import { paginateReviews } from '../utils/bestBuyUtils/paginate';
 import { Summary } from '../utils/general/general';
 
 const App: React.FC<{}> = () => {
@@ -25,19 +25,16 @@ const App: React.FC<{}> = () => {
 
   useEffect(() => {
     let itmIdMatch1 = productUrl.match(/[/]([0-9]{7})/);
-    console.log(reviews);
     let itmId = '';
     if (itmIdMatch1) {
       itmId = itmIdMatch1[1];
     }
-    console.log('itmId=', itmId);
     chrome.runtime.sendMessage(
       {
         site: 'BestBuy',
         itmId: itmId,
       },
       (response) => {
-        console.log(response);
         response = JSON.parse(response);
         if (response.inDB) {
           setSummary(response.summary);
@@ -52,34 +49,26 @@ const App: React.FC<{}> = () => {
   useEffect(() => {
     if (alreadyInDB) {
       // Query Selectors
-      const allReviewsDivSelector =
-        '.c-button.c-button-secondary.c-button-md.c-button-block.see-more-reviews.mb-xs-300.mb-md-none.mr-md-400';
-      const anchorAllReviewSelector = '.button.button--small';
+      const allReviewsButtonSelector =
+        'a.c-button[data-track="See All Customer Reviews"]';
       // First, try to check if see all reviews div exists, if so we will grab the link paginate all reviews
       // Ebay has two different urls for products, a https://www.ebay.com/itm/... & https://www.ebay.com/p/...
       // For whatever reason, the DOM is the same with slightly different class names for some elements, such as for the allReviews link
       // In the below implementation, we query the document twice using both selectors to cover both cases, we will then use the one that is not null
-      const seeAllReviewsDiv = document.querySelector(allReviewsDivSelector);
+      const seeAllReviewsAnchor = document.querySelector(
+        allReviewsButtonSelector
+      );
 
       // Treat as if we are already on the all reviews page unless we get an actual link from the DOM
       let seeAllReviewsLink = productUrl;
-      if (seeAllReviewsDiv) {
-        // if div is found, check if we can grab link
-        const anchorElement = seeAllReviewsDiv.querySelector(
-          anchorAllReviewSelector
-        );
-        // if anchor element found, update link
-        if (anchorElement) {
-          seeAllReviewsLink = anchorElement.getAttribute('href');
-        }
+      if (seeAllReviewsAnchor) {
+        seeAllReviewsLink =
+          'https://www.bestbuy.com' +
+          seeAllReviewsAnchor.getAttribute('href') +
+          '&page=1';
       }
       // Begin pagination on found link
-      paginateReviews(
-        seeAllReviewsLink + '?page=1',
-        1,
-        setReviews,
-        setNoMoreReviews
-      );
+      paginateReviews(seeAllReviewsLink, 1, setReviews, setNoMoreReviews);
     }
   }, [alreadyInDB]);
 
@@ -87,12 +76,10 @@ const App: React.FC<{}> = () => {
     // If there are no more reviews to grab, send a message to background script to summarize these reviews
     if (alreadyInDB && noMoreReviews && forceRefresh) {
       let itmIdMatch1 = productUrl.match(/[/]([0-9]{7})/);
-      console.log(reviews);
       let itmId = '';
       if (itmIdMatch1) {
         itmId = itmIdMatch1[1];
       }
-      console.log(itmId);
       chrome.runtime.sendMessage(
         {
           reviews: reviews,
@@ -102,7 +89,6 @@ const App: React.FC<{}> = () => {
         },
         (response) => {
           response = JSON.parse(response);
-          console.log('received data', response);
           setSummary(response.message); // update summary with message received
           setForceRefresh(false);
         }

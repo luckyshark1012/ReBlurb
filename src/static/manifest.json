@@ -31,7 +31,10 @@
     },
     {
       "js": ["bestBuyReviews.js"],
-      "matches": ["https://www.bestbuy.com/site/*.p?*"]
+      "matches": [
+        "https://www.bestbuy.com/site/*.p?*",
+        "https://www.bestbuy.com/site/reviews/*"
+      ]
     }
   ],
   "action": {

@@ -5,7 +5,6 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import RadioGroup from '@mui/material/RadioGroup';
 import Radio from '@mui/material/Radio';
-import Divider from '@mui/material/Divider';
 import './popup.css';
 import { FormControl, FormControlLabel, FormLabel } from '@mui/material';
 
@@ -17,16 +16,23 @@ const App: React.FC<{}> = () => {
   };
 
   useEffect(() => {
+    // Determine what the locally stored prompt preference is
     chrome.storage.local.get('promptType', (value) => {
+      // update prompt with local pref
       setPromptFormat(value.promptType);
+      // show content after prompt set
       setShowContent(true);
     });
   }, []);
+  // Update prompt type in storage on change of preference
   useEffect(() => {
+    // Lets reload the content script / page content when pref is switched, this allows user to see summary with new pref type
+    chrome.tabs.reload();
+    // Update the local storage of promptType
     chrome.storage.local.set({ promptType: promptFormat });
-    console.log(promptFormat);
-  }, [promptFormat]);
+  }, [promptFormat]); // Only run on change of promptFormat
 
+  // If showContent, show this popup window, else show nothing
   return showContent ? (
     <Paper className="popUpPaper" elevation={24}>
       <Stack direction="column" alignItems="center">

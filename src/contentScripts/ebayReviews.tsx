@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import './ebayReviews.css';
+import './summary.css';
 import { paginateReviews } from '../utils/ebayUtils/paginate';
 import { Summary } from '../utils/general/general';
 
@@ -25,7 +25,6 @@ const App: React.FC<{}> = () => {
   useEffect(() => {
     let itmIdMatch1 = productUrl.match(/itm[=/](\d{12})/);
     let itmIdMatch2 = productUrl.match(/(?:p|product-reviews)\/(\d{10})/);
-    console.log(reviews);
     let itmId = '';
     if (itmIdMatch1) {
       itmId = itmIdMatch1[1];
@@ -38,7 +37,6 @@ const App: React.FC<{}> = () => {
         itmId: itmId,
       },
       (response) => {
-        console.log(response);
         response = JSON.parse(response);
         if (response.inDB) {
           setSummary(response.summary);
@@ -87,14 +85,12 @@ const App: React.FC<{}> = () => {
     if (alreadyInDB && noMoreReviews && forceRefresh) {
       let itmIdMatch1 = productUrl.match(/itm[=/](\d{12})/);
       let itmIdMatch2 = productUrl.match(/(?:p|product-reviews)\/(\d{10})/);
-      console.log(reviews);
       let itmId = '';
       if (itmIdMatch1) {
         itmId = itmIdMatch1[1];
       } else if (itmIdMatch2) {
         itmId = itmIdMatch2[1];
       }
-      console.log(itmId);
       chrome.runtime.sendMessage(
         {
           reviews: reviews,
@@ -104,7 +100,6 @@ const App: React.FC<{}> = () => {
         },
         (response) => {
           response = JSON.parse(response);
-          console.log('received data', response);
           setSummary(response.message); // update summary with message received
           setForceRefresh(false);
         }

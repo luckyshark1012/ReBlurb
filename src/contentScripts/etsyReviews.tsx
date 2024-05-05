@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import './ebayReviews.css';
+import './summary.css';
 import { Summary } from '../utils/general/general';
 
 const App: React.FC<{}> = () => {
@@ -23,7 +23,6 @@ const App: React.FC<{}> = () => {
   };
   useEffect(() => {
     let itmIdMatch1 = productUrl.match(/listing[/](\d{10})/);
-    console.log(reviews);
     let itmId = '';
     if (itmIdMatch1) {
       itmId = itmIdMatch1[1];
@@ -34,7 +33,6 @@ const App: React.FC<{}> = () => {
         itmId: itmId,
       },
       (response) => {
-        console.log(response);
         response = JSON.parse(response);
         if (response.inDB) {
           setSummary(response.summary);
@@ -120,15 +118,12 @@ const App: React.FC<{}> = () => {
 
   useEffect(() => {
     // If there are no more reviews to grab, send a message to background script to summarize these reviews
-    console.log(noMoreReviews, forceRefresh);
     if (alreadyInDB && noMoreReviews && forceRefresh) {
       let itmIdMatch1 = productUrl.match(/listing[/](\d{10})/);
-      console.log(reviews);
       let itmId = '';
       if (itmIdMatch1) {
         itmId = itmIdMatch1[1];
       }
-      console.log(itmId);
       chrome.runtime.sendMessage(
         {
           reviews: reviews,
@@ -138,7 +133,6 @@ const App: React.FC<{}> = () => {
         },
         (response) => {
           response = JSON.parse(response);
-          console.log('received data', response);
           setSummary(response.message); // update summary with message received
           setForceRefresh(false);
         }

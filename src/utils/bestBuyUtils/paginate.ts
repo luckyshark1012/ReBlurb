@@ -7,7 +7,7 @@
 */
 
 // How many pages of reviews to paginate
-const MAX_PAGES = 3;
+const MAX_PAGES = 5;
 
 // A function that fetches a given url and uses setReviews and setNoMoreReviews to update reviews found
 // Count is incremented each call, and if count is greater than 0, or if a new url could not be found, recursion stops
@@ -18,9 +18,10 @@ export async function paginateReviews(
   setNoMoreReviews // update no more reviews state
 ) {
   try {
+    url;
     // Query Selectors
-    const reviewSelector = '.partReviews__review';
-    const contentSelector = '.partReviews__writeup.markdown';
+    const reviewSelector = '.review-item';
+    const contentSelector = '.pre-white-space';
     await delay(1000);
     const response = await fetch(url); // fetch url
     const html = await response.text(); // convert to html
