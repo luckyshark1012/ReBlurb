@@ -79,6 +79,33 @@ const App: React.FC<{}> = () => {
             </FormControl>
           </Paper>
         </Stack>
+        <Paper
+          elevation={2}
+          style={{
+            width: '95%',
+            marginTop: '20px',
+            marginLeft: '3px',
+          }}
+        >
+          <Typography
+            variant="h6"
+            fontSize="20px"
+            style={{ marginLeft: '8px' }}
+          >
+            Websites currently supported
+          </Typography>
+          <li style={{ fontSize: '14px', marginLeft: '12px' }}>Ebay</li>
+          <li style={{ fontSize: '14px', marginLeft: '12px' }}>BestBuy</li>
+          <li
+            style={{
+              fontSize: '14px',
+              marginLeft: '12px',
+              marginBottom: '6px',
+            }}
+          >
+            PcPartPicker
+          </li>
+        </Paper>
       </Stack>
     </Paper>
   ) : null;

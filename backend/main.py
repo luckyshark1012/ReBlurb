@@ -26,7 +26,7 @@ TOKENS_TO_USE = MAX_TOKENS - 250
 # Rough estimate of max chars to use in request given we reserve 250 tokens for response
 MAX_CHARS = 4 * TOKENS_TO_USE
 
-PROMPT_SUMMARIZE_AS_PARAGRAPH = "You are a product summarizer, capable of summarizing multiple product reviews into a single concise summary of what the reviews emphasize. Keep your response to 80 words or less. Individual product reviews are separated by the '|' character. Keep your response to 3 sentences or less."
+PROMPT_SUMMARIZE_AS_PARAGRAPH = "You are a product summarizer, capable of summarizing multiple product reviews into a single concise summary of what the reviews emphasize. Keep your response to 80 words or less. Individual product reviews are separated by the '|' character."
 PROMPT_SUMMARIZE_AS_BULLETS = "You are a product summarizer, capable of summarizing multiple product reviews into 3 bullet points or less. Keep your response to 80 words or less and use the standard bullet character. Seperate bullet points with 2 newlines. Individual product reviews are separated by the '|' character."
 GPT_3_5_TURBO_0125 = "gpt-3.5-turbo-0125"
 
@@ -104,12 +104,10 @@ def insertIntoDB(collection_name: str, productId: str, summary: str, site: str, 
     document_name = f"{productId}:{site}:{promptType}"
     sum_ref = db.collection(
         collection_name).document(document_name)
-    print("trying to set doc")
     try:
         sum_ref.set({"summary": summary})
     except Exception as e:
         raise
-    print("done setting doc")
 
 
 def queryDBSummary(collection_name: str, productId: str, site: str, promptType: str):
@@ -130,7 +128,6 @@ def callOpenAI(model: str, prompt: str, pipe_delimited_review: str):
     # Init our openAI client
     # Use secret var to store API KEY
     client = OpenAI(api_key=os.environ.get('OPENAI_API_KEY'))
-    print("calling openaiapi")
     # Query gpt
     completion = client.chat.completions.create(
         # gpt-3.5-turbo-0125 supports 16k tokens, cheapest, effective
@@ -141,7 +138,6 @@ def callOpenAI(model: str, prompt: str, pipe_delimited_review: str):
             {"role": "user", "content": pipe_delimited_review}
         ]
     )
-    print("returning openai reponse")
     return completion.choices[0].message.content
 
 
