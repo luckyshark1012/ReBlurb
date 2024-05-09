@@ -1,6 +1,6 @@
 # ReBlurb
 
-A Chrome web extension that summarizes user reviews of products on e-commerce websites by feeding user reviews to an AI model. Price performance, how the product stands out amongst similar products, and providing unbiased summaries of the product are emphasized to provide useful product selection for the user.
+A Chrome web extension that summarizes user reviews of products on e-commerce websites by feeding user reviews to an AI model. Price performance and providing unbiased summaries of the product are emphasized to provide useful product selection for the user. Currently the following sites are compatible: Ebay.com, BestBuy.com, and PcPartPickers.com. Etsy.com is currently being integrated as well but not fully functioning as expected.
 
 ## Author
 
