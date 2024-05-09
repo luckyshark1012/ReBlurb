@@ -25,8 +25,8 @@ MAX_TOKENS = 16000
 TOKENS_TO_USE = MAX_TOKENS - 250
 # Rough estimate of max chars to use in request given we reserve 250 tokens for response
 MAX_CHARS = 4 * TOKENS_TO_USE
-# Number of words allowed in a returned openai response, we ask sp
-WORD_LIMIT = 90
+# Number of words allowed in a returned openai response
+WORD_LIMIT = 80
 
 PROMPT_SUMMARIZE_AS_PARAGRAPH = "You are a product summarizer, capable of summarizing multiple product reviews into a single concise summary of what the reviews emphasize. Keep your response to 80 words or less. Individual product reviews are separated by the '|' character."
 PROMPT_SUMMARIZE_AS_BULLETS = "You are a product summarizer, capable of summarizing multiple product reviews into 3 bullet points or less. Keep your response to 80 words or less and use the standard bullet character. Seperate bullet points with 2 newlines. Individual product reviews are separated by the '|' character."
@@ -55,17 +55,11 @@ def process_request():
             return jsonify({'error': 'Missing required data field: reviews'})
         review_string = create_user_content(reviews)
         if promptType == "sentences":
-            while True:
-                summary = callOpenAI(GPT_3_5_TURBO_0125,
-                                    PROMPT_SUMMARIZE_AS_PARAGRAPH, review_string)
-                if checkResponseLength(summary):
-                    break
+            summary = callOpenAI(GPT_3_5_TURBO_0125,
+                                 PROMPT_SUMMARIZE_AS_PARAGRAPH, review_string)
         else:
-            while True:
-                summary = callOpenAI(GPT_3_5_TURBO_0125,
-                                    PROMPT_SUMMARIZE_AS_BULLETS, review_string)
-                if checkResponseLength(summary):
-                    break;
+            summary = callOpenAI(GPT_3_5_TURBO_0125,
+                                 PROMPT_SUMMARIZE_AS_BULLETS, review_string)
         insertIntoDB('productSummaries', itm_id, summary, site, promptType)
         # Grab the first message's content: what gpt is sending as result
         processed_data = {'message': summary}
@@ -148,8 +142,8 @@ def callOpenAI(model: str, prompt: str, pipe_delimited_review: str):
     )
     return completion.choices[0].message.content
 
-def checkResponseLength(openai_response: str):
-    if openai_response.split() > WORD_LIMIT:
+def checkResponseLength(respone: str):
+    if response.split() > WORD_LIMIT:
         return False
     else:
         return True
