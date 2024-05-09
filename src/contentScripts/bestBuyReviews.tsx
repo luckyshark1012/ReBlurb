@@ -17,6 +17,7 @@ const App: React.FC<{}> = () => {
     setHideSummary(true);
   };
   const handleRefreshSummary = () => {
+    setSummary(null);
     setForceRefresh(true);
     if (!alreadyInDB) {
       setAlreadyInDB(true);
@@ -47,7 +48,6 @@ const App: React.FC<{}> = () => {
   }, []);
 
   useEffect(() => {
-    setSummary(null);
     if (alreadyInDB) {
       // Query Selectors
       const allReviewsButtonSelector =

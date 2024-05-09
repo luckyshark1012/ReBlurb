@@ -22,6 +22,8 @@ const App: React.FC<{}> = () => {
   };
 
   const handleRefreshSummary = () => {
+    // To be safe and for user clarity, set summary to null so we show loading message while scraping (and processing in future)
+    setSummary(null);
     // Query backend by force
     setForceRefresh(true);
     // If not in DB / we haven't scraped reviews yet, then set state
@@ -64,8 +66,6 @@ const App: React.FC<{}> = () => {
   // Find page to start pagination on
   // RUNS ONLY ON UPDATE TO alreadyInDB FLAG
   useEffect(() => {
-    // To be safe and for user clarity, set summary to null so we show loading message while scraping (and processing in future)
-    setSummary(null);
     // If flag set, begin querying
     if (alreadyInDB) {
       // Query Selectors
