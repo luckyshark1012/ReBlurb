@@ -13,6 +13,8 @@ const App: React.FC<{}> = () => {
   const [showContent, setShowContent] = useState<boolean>(false);
   const handlePromptChange = (val) => {
     setPromptFormat(val.target.value);
+    // Lets reload the content script / page content when pref is switched, this allows user to see summary with new pref type
+    chrome.tabs.reload();
   };
 
   useEffect(() => {
@@ -26,8 +28,6 @@ const App: React.FC<{}> = () => {
   }, []);
   // Update prompt type in storage on change of preference
   useEffect(() => {
-    // Lets reload the content script / page content when pref is switched, this allows user to see summary with new pref type
-    chrome.tabs.reload();
     // Update the local storage of promptType
     chrome.storage.local.set({ promptType: promptFormat });
   }, [promptFormat]); // Only run on change of promptFormat
