@@ -148,8 +148,8 @@ def callOpenAI(model: str, prompt: str, pipe_delimited_review: str):
     )
     return completion.choices[0].message.content
 
-def checkResponseLength(respone: str):
-    if response.split() > WORD_LIMIT:
+def checkResponseLength(openai_response: str):
+    if openai_response.split() > WORD_LIMIT:
         return False
     else:
         return True
