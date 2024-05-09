@@ -85,6 +85,8 @@ const App: React.FC<{}> = () => {
         if (anchorElement) {
           seeAllReviewsLink = anchorElement.getAttribute('href');
         }
+      } else {
+        setHideSummary(true);
       }
       // Begin pagination on found link
       paginateReviews(

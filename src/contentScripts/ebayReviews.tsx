@@ -75,6 +75,8 @@ const App: React.FC<{}> = () => {
         seeAllReviewsLink = seeAllReviewsDivP
           .querySelector(actionSelectorP)
           .getAttribute('href');
+      } else {
+        setHideSummary(true);
       }
       // Begin pagination on found link
       paginateReviews(seeAllReviewsLink, 0, setReviews, setNoMoreReviews);

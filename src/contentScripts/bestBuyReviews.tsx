@@ -67,6 +67,9 @@ const App: React.FC<{}> = () => {
           'https://www.bestbuy.com' +
           seeAllReviewsAnchor.getAttribute('href') +
           '&page=1';
+      } else {
+        // If see all reviews anchor not exist, hide summary as no reviews are present
+        setHideSummary(true);
       }
       // Begin pagination on found link
       paginateReviews(seeAllReviewsLink, 1, setReviews, setNoMoreReviews);
