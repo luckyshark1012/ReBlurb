@@ -25,8 +25,6 @@ MAX_TOKENS = 16000
 TOKENS_TO_USE = MAX_TOKENS - 250
 # Rough estimate of max chars to use in request given we reserve 250 tokens for response
 MAX_CHARS = 4 * TOKENS_TO_USE
-# Number of words allowed in a returned openai response
-WORD_LIMIT = 80
 
 PROMPT_SUMMARIZE_AS_PARAGRAPH = "You are a product summarizer, capable of summarizing multiple product reviews into a single concise summary of what the reviews emphasize. Keep your response to 80 words or less. Individual product reviews are separated by the '|' character."
 PROMPT_SUMMARIZE_AS_BULLETS = "You are a product summarizer, capable of summarizing multiple product reviews into 3 bullet points or less. Keep your response to 80 words or less and use the standard bullet character. Seperate bullet points with 2 newlines. Individual product reviews are separated by the '|' character."
@@ -141,12 +139,6 @@ def callOpenAI(model: str, prompt: str, pipe_delimited_review: str):
         ]
     )
     return completion.choices[0].message.content
-
-def checkResponseLength(respone: str):
-    if response.split() > WORD_LIMIT:
-        return False
-    else:
-        return True
 
 if __name__ == "__main__":
     app.run(debug=False, host="0.0.0.0",
