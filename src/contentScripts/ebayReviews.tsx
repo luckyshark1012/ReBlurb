@@ -48,6 +48,7 @@ const App: React.FC<{}> = () => {
     );
   }, []);
   useEffect(() => {
+    setSummary(null);
     if (alreadyInDB) {
       // Query Selectors
       const allReviewsItmSelector = '.x-review-details__allreviews';

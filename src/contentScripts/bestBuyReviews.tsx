@@ -47,6 +47,7 @@ const App: React.FC<{}> = () => {
   }, []);
 
   useEffect(() => {
+    setSummary(null);
     if (alreadyInDB) {
       // Query Selectors
       const allReviewsButtonSelector =

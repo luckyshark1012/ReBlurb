@@ -45,6 +45,7 @@ const App: React.FC<{}> = () => {
   }, []);
 
   useEffect(() => {
+    setSummary(null);
     if (alreadyInDB) {
       // Etsy is organized pretty straightforward, these are the two selectors I will be using to get reviews
       const reviewDivSelector = '.wt-grid__item-xs-12.review-card';
