@@ -14,6 +14,7 @@ Aaron David - aaron-m-david
 ## Install
 
 - After building, the `dist` directory holds chrome extension ready to be installed into Chrome
+- For further instructions on how to install a chrome extension, look [at step 2 here](https://support.google.com/chrome/a/answer/2714278?hl=en)
 
 ## Acknowledgements
 
