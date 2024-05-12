@@ -17,17 +17,21 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         );
       })
       .catch((error) => {
+        // Send back a response indicating a failure occured
         sendResponse({ failure: true });
       });
     // Make asynchronous here: https://developer.chrome.com/docs/extensions/develop/concepts/messaging
     return true;
   } else {
+    // if no reviews were included in the message, then check if the product is stored in our DB
     checkInDB(request.site, request.itmId).then(async (response) => {
+      // Turn the response into a string repr
       JSON.stringify({
         failure: false,
         inDB: response.inDB,
         summary: response.summary,
       });
+      // Send a response back with the possible summary
       sendResponse(
         JSON.stringify({
           failure: false,
@@ -36,14 +40,18 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         })
       );
     });
+    // Make asynchronous here: https://developer.chrome.com/docs/extensions/develop/concepts/messaging
     return true;
   }
 });
 
+/* On installation of chrome extension, initialize some default data */
 chrome.runtime.onInstalled.addListener((details) => {
+  // Call helper to init data
   initializeDefaultData();
 });
 
+/* Currently, sets the default promptType to sentences */
 function initializeDefaultData() {
   chrome.storage.local.set({ promptType: 'sentences' });
 }
@@ -52,6 +60,7 @@ function initializeDefaultData() {
 async function insertIntoBackend(reviews, site, itmId, forceRefresh) {
   // My webserver_url (Should be fine here, no API key is returned. Server will call the openAI API and return a summary to the client)
   const webserver_url = 'https://backend-5qe4piohsq-uw.a.run.app';
+  // Grab the prompt type stored in storage
   let promptType = (await chrome.storage.local.get('promptType')).promptType;
   try {
     // Send a POST request to webserver containing the reviews
@@ -79,10 +88,13 @@ async function insertIntoBackend(reviews, site, itmId, forceRefresh) {
   }
 }
 
+// A function used to interact with my webserver and check if the product summary is already in the DB or not
 async function checkInDB(site, itmId) {
   // My webserver_url (Should be fine here, no API key is returned. Server will check if in DB
   let webserver_url = 'https://backend-5qe4piohsq-uw.a.run.app/checkDB?';
+  // Grab the prompt type stored in storage
   let promptType = (await chrome.storage.local.get('promptType')).promptType;
+  // Build up the url for the GET request
   webserver_url =
     webserver_url +
     'site=' +
