@@ -5,7 +5,7 @@
   width: 380px !important; /* This is a good width that feels readable */
   height: 380px !important; /* ChatGPT has a tendency to overwrite, while i could catch this in the backend it is easy to just make a bigger popup */
   /*padding: 10px; */
-  z-index: 170100031; /* Jesus christ this is dumb, set z-index to something ridiculous so we can actually see popup ;( */
+  z-index: 170100031; /* Jesus christ this is dumb, set z-index to something ridiculous so we can actually see popup, eBay has HORRIBLE html which is why we need this ;( */
 }
 .summaryReview P {
   white-space: pre-line !important;
