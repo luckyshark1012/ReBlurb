@@ -18,7 +18,6 @@ export async function paginateReviews(
   setNoMoreReviews // update no more reviews state
 ) {
   try {
-    url;
     // Query Selectors
     const reviewSelector = '.review-item';
     const contentSelector = '.pre-white-space';
