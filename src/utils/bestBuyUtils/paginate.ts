@@ -22,7 +22,7 @@ export async function paginateReviews(
     // Query Selectors
     const reviewSelector = '.review-item';
     const contentSelector = '.pre-white-space';
-    await delay(1000);
+    // await delay(1000);
     const response = await fetch(url); // fetch url
     const html = await response.text(); // convert to html
     // Begin parsing html

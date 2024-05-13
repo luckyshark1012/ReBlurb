@@ -17,6 +17,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         );
       })
       .catch((error) => {
+        console.log(error);
         // Send back a response indicating a failure occured
         sendResponse({ failure: true });
       });

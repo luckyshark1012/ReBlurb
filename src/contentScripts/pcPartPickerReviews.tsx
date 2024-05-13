@@ -105,6 +105,7 @@ const App: React.FC<{}> = () => {
     if (alreadyInDB && noMoreReviews && forceRefresh) {
       // Grab the itms unique id from url
       let itmIdMatch = productUrl.match(/product[/]([a-zA-Z0-9]{6})/);
+      console.log('got reviews:', reviews);
       let itmId = '';
       if (itmIdMatch) {
         itmId = itmIdMatch[1];
